@@ -6,7 +6,7 @@ random.seed()
 
 class Game:
     # This is the main game class that is used by both the GUI module and the AI module
-    def __init__(self, N=4, DownSideRatio=3, SleepTime=5, R=25, r=5, Height=400, Halfwidth=200,
+    def __init__(self, N=4, DownSideRatio=3, SleepTime=5, R=15, r=5, Height=400, Halfwidth=200,
                  GlobalHeight=600, GlobalWidth=800, Thickness=20, RandomTreshold=0.2, RandomStep=1,
                  RandomVertTreshold=0.2, RandomVertStep=1, MaxScore=None):
         self.N = N     # number of falling objects

@@ -9,6 +9,7 @@ class Choose:
     # Window to chose Human/AI player
     def __init__(self):
         self.master = Tk()
+        self.master.title('Obstacle Avoiding AI')
         self.frame = Frame(self.master)
         self.frame.pack()
 
@@ -59,6 +60,7 @@ class Play:
         self.y = self.game.GlobalHeight - self.game.Thickness
 
         self.master = Tk()
+        self.master.title('Obstacle Avoiding AI')
         self.canvas=Canvas(self.master, bg="black", width=self.game.GlobalWidth, height=self.game.GlobalHeight)
         self.canvas.pack()
 

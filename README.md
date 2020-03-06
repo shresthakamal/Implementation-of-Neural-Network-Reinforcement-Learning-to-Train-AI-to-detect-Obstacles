@@ -1,5 +1,4 @@
-# AIVoid
-
+# Implementation of Neural Network Reinforcement Learning to train AI to avoid Obstacles
 This is a simple game in python which can be played by both human player and an AI Player. AI has been trained via neural network reinforcement learning.
 
 ## Usage:
