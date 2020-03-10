@@ -7,7 +7,7 @@ random.seed()
 class Game:
     # This is the main game class that is used by both the GUI module and the AI module
     def __init__(self, N=4, DownSideRatio=3, SleepTime=5, R=15, r=5, Height=400, Halfwidth=200,
-                 GlobalHeight=600, GlobalWidth=800, Thickness=20, RandomTreshold=0.2, RandomStep=1,
+                 GlobalHeight=600, GlobalWidth=800, Thickness=15, RandomTreshold=0.2, RandomStep=1,
                  RandomVertTreshold=0.2, RandomVertStep=1, MaxScore=None):
         self.N = N     # number of falling objects
         self.DownSideRatio = DownSideRatio     # ratio fall speed/left-right speed (integer)
@@ -20,15 +20,20 @@ class Game:
         self.GlobalHeight = GlobalHeight     # height of the game window
         self.GlobalWidth = GlobalWidth     # width of the game window
         self.Thickness = Thickness     # thickness of the white walls
+        
+
         self.RandomTreshold = RandomTreshold     # probability of left/right noise for falling objects
         self.RandomStep = RandomStep     # intensity of left/right noise for falling objects
         self.RandomVertTreshold = RandomVertTreshold     # probability of up/down noise for falling objects
         self.RandomVertStep = RandomVertStep     # intensity of up/down noise for falling objects
-        self.MaxScore = MaxScore     # Maximum Score before terminating the game (None for infinity)
         
+
+        self.MaxScore = MaxScore     # Maximum Score before terminating the game (None for infinity)
+        self.retry=False
         self.Direction = random.choice(['L','R'])     # setting the initial direction
         self.steps, self.counter = 0, 0     # total pixel moves (time) and total score
         self.asteroids = []     # relative coordinates of the falling objects
+       
         for i in range(N):         # initialize the falling objects' coordinates
             t = random.random()
             if t < 0.5:

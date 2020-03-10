@@ -89,19 +89,25 @@ class Play:
 
         
     def RunStep(self):
+
+
         # Moves objects on the screen
         if self.game.Direction == 'L':
             self.canvas.move('S', -1, 0)
             self.x -= 1
             if self.x < (-1)*self.game.GlobalWidth/2:
                 self.x += self.game.GlobalWidth
-                self.canvas.move('S', self.game.GlobalWidth, 0)                                    
+                self.canvas.move('S', self.game.GlobalWidth, 0)     
+
         if self.game.Direction == 'R':
             self.canvas.move('S', 1, 0)
             self.x += 1
             if self.x > 3*self.game.GlobalWidth/2:
                 self.x -= self.game.GlobalWidth
                 self.canvas.move('S', (-1)*self.game.GlobalWidth, 0)
+
+
+
         self.canvas.move('A', 0, self.game.DownSideRatio)
         (Update, Kill, Over) = self.game.UpdateStep()
         if Update:
@@ -120,12 +126,13 @@ class Play:
 
 
 class PlayHuman(Play):
+
     # Play subclass for a human player
     def __init__(self, GameParameters):
         Play.__init__(self, GameParameters)
             
         self.text_id = self.canvas.create_text(0,0,anchor="nw",fill="white",font=("Purisa", 14),
-                                               text="Space to start, Left/Right to change direction",tag='Text')
+                                               text="                Space to start, Left/Right to change direction",tag='Text')
         self.canvas.bind("<Left>", self.left)
         self.canvas.bind("<Right>", self.right)
         self.canvas.bind("<space>", self.Run)            
@@ -143,6 +150,16 @@ class PlayHuman(Play):
         Over = False
         while not Over:
             Over = Play.RunStep(self)
+            
+            if(Over):
+                self.master.after(2000,self.master.config(bg='white'))
+                self.master.after(100, self.master.destroy())
+                app=PlayHuman(GameParameters)
+                app.master.mainloop()
+                print( "Human Score:", app.game.counter)
+
+
+
 
 
 
@@ -154,7 +171,7 @@ class PlayAI(Play):
         Play.__init__(self, GameParameters)
         self.bot = Bot(Theta1, Theta2, self.game)
 
-        self.text_id = self.canvas.create_text(0,0,anchor="nw",fill="white",font=("Purisa", 14),text="Space to start",tag='Text')
+        self.text_id = self.canvas.create_text(0,0,anchor="nw",fill="white",font=("Purisa", 14),text="                     Space to start",tag='Text')
         self.canvas.bind("<space>", self.Run)            
 
 
@@ -163,6 +180,36 @@ class PlayAI(Play):
         while not Over:
             self.bot.TestStep()                    
             Over = Play.RunStep(self)
+
+            #Resume Game Playing
+            if(Over):
+                self.master.after(2000,self.master.config(bg='white'))
+                self.master.after(100, self.master.destroy())
+                if(who=='ai'):
+                    arrays = np.load(FileToOpen)
+                    GameParameters = arrays['GameParameters'][()]
+                    GameParameters['SleepTime'] = howfast
+                    Theta1 = arrays['Theta1']
+                    Theta2 = arrays['Theta2']
+                    app = PlayAI(Theta1, Theta2, GameParameters)
+                    app.master.mainloop()
+                    print( "AI Score:", app.game.counter)
+
+                if(who=='dumb_ai'):
+                    arrays = np.load(FileToOpen)
+                    GameParameters = arrays['GameParameters'][()]
+                    GameParameters['SleepTime'] = howfast
+                    Theta1 = arrays['Theta1']
+                    Theta2 = arrays['Theta2']
+
+                    Theta1 = np.random.uniform(-1.0, 1.0, Theta1.shape)
+                    Theta2 = np.random.uniform(-1.0, 1.0, Theta2.shape)
+
+                    app = PlayAI(Theta1, Theta2, GameParameters)
+                    app.master.mainloop()
+
+                    print( "Dumb AI Score:", app.game.counter)
+
 
 
                                
@@ -182,9 +229,10 @@ if who == 'human':
     GameParameters = {'N':howmany, 'DownSideRatio':3, 'SleepTime':howfast, 'R':25, 'r':5, 'Height':400, 'Halfwidth':200,
                       'GlobalHeight':600, 'GlobalWidth':800, 'Thickness':20, 'RandomTreshold':0.2, 'RandomStep':1,
                       'RandomVertTreshold':0.2, 'RandomVertStep':1, 'MaxScore':None}
+
+
     app=PlayHuman(GameParameters)
     app.master.mainloop()
-
     print( "Human Score:", app.game.counter)
 
     
@@ -215,7 +263,3 @@ if who == 'dumb_ai':
     app.master.mainloop()
 
     print( "Dumb AI Score:", app.game.counter)
-
-
-    
-
